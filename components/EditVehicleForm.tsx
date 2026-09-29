@@ -18,6 +18,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { updateVehicle } from "@/app/actions";
+import { useFormStatus } from "react-dom";
 
 const BRANDS = [
   "Maruti Suzuki",
@@ -483,13 +484,7 @@ export default function EditVehicleForm({
           <Link href="/vehicles" className="btn-secondary">
             Cancel
           </Link>
-          <button
-            type="submit"
-            disabled={compressing}
-            className="btn-primary bg-accent hover:bg-accent/90 disabled:opacity-50"
-          >
-            <Save size={16} className="mr-1.5" /> Save Changes
-          </button>
+          <SubmitButton disabled={compressing} label="Save Changes" />
         </div>
       </form>
     </div>
@@ -509,7 +504,7 @@ function SectionHeader({
 }) {
   return (
     <div className={`flex items-center gap-3 ${noMargin ? "" : "mb-4"}`}>
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
         <Icon size={18} />
       </span>
       <div>
@@ -582,5 +577,23 @@ function StatusOption({
         <div className="text-xs text-ink/50">{desc}</div>
       </div>
     </label>
+  );
+}
+
+function SubmitButton({ disabled, label }: { disabled: boolean; label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={disabled || pending}
+      className="btn-primary bg-accent hover:bg-accent/90 disabled:opacity-50"
+    >
+      {pending ? (
+        <Loader2 size={16} className="mr-1.5 animate-spin" />
+      ) : (
+        <Save size={16} className="mr-1.5" />
+      )}
+      {pending ? "Saving..." : label}
+    </button>
   );
 }

@@ -9,6 +9,9 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Boomdrive | Logbook",
   description: "Vehicle reseller logbook and partner settlement tracker",
+  icons: {
+    icon: "/boomdrive-logo.jpg",
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

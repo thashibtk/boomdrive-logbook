@@ -18,6 +18,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { addVehicle } from "@/app/actions";
+import { useFormStatus } from "react-dom";
 
 const BRANDS = [
   "Maruti Suzuki",
@@ -430,15 +431,17 @@ export default function AddVehicleForm({
 
             {/* Partner Information */}
             <div className="card p-5">
-              <div className="mb-3 flex items-start justify-between">
-                <SectionHeader
-                  icon={Users}
-                  title="Partner Information"
-                  subtitle="Link a business partner if any."
-                  noMargin
-                />
-                <label className="flex cursor-pointer items-center gap-2 text-sm">
-                  <span>Add Partner</span>
+              <div className="mb-3 flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <SectionHeader
+                    icon={Users}
+                    title="Partner Info"
+                    subtitle="Link a business partner."
+                    noMargin
+                  />
+                </div>
+                <label className="mt-1 flex shrink-0 cursor-pointer items-center gap-2 text-sm">
+                  <span className="hidden whitespace-nowrap font-medium text-ink/80 sm:inline">Add</span>
                   <button
                     type="button"
                     onClick={() => setAddPartner((v) => !v)}
@@ -447,7 +450,7 @@ export default function AddVehicleForm({
                     }`}
                   >
                     <span
-                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                      className={`absolute left-0 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
                         addPartner ? "translate-x-5" : "translate-x-0.5"
                       }`}
                     />
@@ -458,8 +461,8 @@ export default function AddVehicleForm({
               {addPartner && (
                 <>
                   <input type="hidden" name="add_partner" value="on" />
-                  <div className="mb-2 flex items-center gap-3">
-                    <select className="input" name="partner_id" defaultValue="" required>
+                  <div className="mb-2 flex flex-wrap items-center gap-3 sm:flex-nowrap">
+                    <select className="input w-full flex-1" name="partner_id" defaultValue="" required>
                       <option value="" disabled>
                         Select Partner
                       </option>
@@ -471,7 +474,7 @@ export default function AddVehicleForm({
                     </select>
                     <Link
                       href="/partners"
-                      className="shrink-0 whitespace-nowrap text-sm font-medium text-accent hover:underline"
+                      className="shrink-0 text-sm font-medium text-accent hover:underline"
                     >
                       + Add New Partner
                     </Link>
@@ -506,13 +509,7 @@ export default function AddVehicleForm({
           <Link href="/vehicles" className="btn-secondary">
             Cancel
           </Link>
-          <button
-            type="submit"
-            disabled={compressing}
-            className="btn-primary bg-accent hover:bg-accent/90 disabled:opacity-50"
-          >
-            <Save size={16} className="mr-1.5" /> Save Vehicle
-          </button>
+          <SubmitButton disabled={compressing} label="Save Vehicle" />
         </div>
       </form>
     </div>
@@ -532,7 +529,7 @@ function SectionHeader({
 }) {
   return (
     <div className={`flex items-center gap-3 ${noMargin ? "" : "mb-4"}`}>
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
         <Icon size={18} />
       </span>
       <div>
@@ -605,5 +602,23 @@ function StatusOption({
         <div className="text-xs text-ink/50">{desc}</div>
       </div>
     </label>
+  );
+}
+
+function SubmitButton({ disabled, label }: { disabled: boolean; label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={disabled || pending}
+      className="btn-primary bg-accent hover:bg-accent/90 disabled:opacity-50"
+    >
+      {pending ? (
+        <Loader2 size={16} className="mr-1.5 animate-spin" />
+      ) : (
+        <Save size={16} className="mr-1.5" />
+      )}
+      {pending ? "Saving..." : label}
+    </button>
   );
 }

@@ -22,9 +22,11 @@ import {
   Phone,
   Receipt,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 import { formatMoney } from "@/lib/calculations";
 import { addPartner, updatePartner } from "@/app/actions";
+import { useFormStatus } from "react-dom";
 
 // ── Types (shared with app/partners/page.tsx) ─────────
 
@@ -973,16 +975,32 @@ function PartnerModal({
               defaultValue={partner?.phone ?? ""}
             />
           </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary">
-              Cancel
-            </button>
-            <button type="submit" className="btn-primary bg-accent hover:bg-accent/90">
-              {isEdit ? "Save Changes" : "Add Partner"}
-            </button>
-          </div>
+          <ModalActions isEdit={isEdit} onClose={onClose} />
         </form>
       </div>
+    </div>
+  );
+}
+
+function ModalActions({ isEdit, onClose }: { isEdit: boolean; onClose: () => void }) {
+  const { pending } = useFormStatus();
+  
+  return (
+    <div className="flex justify-end gap-2 pt-2">
+      <button type="button" onClick={onClose} disabled={pending} className="btn-secondary disabled:opacity-50">
+        Cancel
+      </button>
+      <button type="submit" disabled={pending} className="btn-primary bg-accent hover:bg-accent/90 disabled:opacity-50">
+        {pending ? (
+          <>
+            <Loader2 size={16} className="mr-1.5 animate-spin" /> Saving...
+          </>
+        ) : isEdit ? (
+          "Save Changes"
+        ) : (
+          "Add Partner"
+        )}
+      </button>
     </div>
   );
 }
