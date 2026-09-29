@@ -274,7 +274,7 @@ export default function VehicleDetailView({
           <h2 className="mb-3 text-sm font-semibold">Financial Summary</h2>
           <div className="grid grid-cols-2 gap-3">
             <SummaryStat icon={Car} label="Purchase Price" value={formatMoney(vehicle.purchase_price)} />
-            <SummaryStat icon={Receipt} label="Total Expenses" value={formatMoney(settlement.total_expenses)} />
+            <SummaryStat icon={Receipt} label="Total Expenses" value={formatMoney(settlement.total_cost)} />
             <SummaryStat
               icon={IndianRupee}
               label="Sale Price"
@@ -400,6 +400,27 @@ export default function VehicleDetailView({
             ) : (
               <p className="text-sm text-ink/50">No partner on this deal — you keep 100%.</p>
             )}
+          </div>
+
+          {/* Contributions / Total Paid */}
+          <div className="card p-5">
+            <h2 className="mb-3 text-sm font-semibold">Total Paid (Invested)</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-ink/50">You</span>
+                <span className="font-semibold">{formatMoney(settlement.admin_total_contribution)}</span>
+              </div>
+              {settlement.partners.map((p) => (
+                <div key={p.partner_id} className="flex items-center justify-between">
+                  <span className="text-ink/50">{p.name}</span>
+                  <span className="font-semibold">{formatMoney(p.total_contribution)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-sm">
+              <span className="font-medium">Total Cost</span>
+              <span className="font-bold">{formatMoney(settlement.total_cost)}</span>
+            </div>
           </div>
 
           {vehicle.status === "sold" && (

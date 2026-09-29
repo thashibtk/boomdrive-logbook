@@ -99,12 +99,16 @@ export default async function DashboardPage() {
     (v) => v.status === "in_stock" && monthKey(v.purchase_date) <= lastMonthKey
   ).length;
 
+  const costOf = (v: any) => {
+    return (expensesByVehicle.get(v.id) ?? []).reduce((sum, e) => sum + Number(e.amount), 0);
+  };
+
   const investedThisMonth = allVehicles
     .filter((v) => monthKey(v.purchase_date) === thisMonthKey)
-    .reduce((s, v) => s + Number(v.purchase_price), 0);
+    .reduce((s, v) => s + costOf(v), 0);
   const investedLastMonth = allVehicles
     .filter((v) => monthKey(v.purchase_date) === lastMonthKey)
-    .reduce((s, v) => s + Number(v.purchase_price), 0);
+    .reduce((s, v) => s + costOf(v), 0);
 
   const soldThisMonth = allVehicles.filter(
     (v) => v.status === "sold" && v.sold_date && monthKey(v.sold_date) === thisMonthKey
@@ -178,7 +182,7 @@ export default async function DashboardPage() {
 
   for (const v of allVehicles) {
     const pk = monthKey(v.purchase_date);
-    if (monthly.has(pk)) monthly.get(pk)!.investment += Number(v.purchase_price);
+    if (monthly.has(pk)) monthly.get(pk)!.investment += costOf(v);
     if (v.status === "sold" && v.sold_date) {
       const sk = monthKey(v.sold_date);
       if (monthly.has(sk)) {

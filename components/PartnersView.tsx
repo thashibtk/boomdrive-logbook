@@ -263,7 +263,7 @@ export default function PartnersView({ partners }: { partners: PartnerData[] }) 
                   <th className="px-2 py-3 font-medium">Partner</th>
                   <th className="px-2 py-3 font-medium">Vehicles</th>
                   <th className="px-2 py-3 font-medium">Total Invested</th>
-                  <th className="px-2 py-3 font-medium">Total Expense Share</th>
+                  <th className="px-2 py-3 font-medium">Total Cost Share</th>
                   <th className="px-2 py-3 font-medium">Profit Share</th>
                   <th className="px-2 py-3 font-medium">Pending Balance</th>
                   <th className="px-4 py-3 font-medium">Actions</th>
